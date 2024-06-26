@@ -30,11 +30,11 @@ def sub_cb(topic, msg):
 # Function to control LED based on LDR value
 def control_led(value):
     if value < 350:
-        led.on()
-        print("LED ON")
-    else:
         led.off()
         print("LED OFF")
+    else:
+        led.on()
+        print("LED ON")
 
 # Setup Wi-Fi connection
 def connect_wifi():
@@ -65,22 +65,22 @@ def move_servo(angle):
 def measure_distance():
     # Trigger the ultrasonic burst
     trigger_pin.off()
-    time.sleep_us(2)
+    time.sleep_us(1)
     trigger_pin.on()
-    time.sleep_us(10)
+    time.sleep_us(5)
     trigger_pin.off()
 
     # Measure the duration of the echo pulse
     timeout_start = time.ticks_us()
     while echo_pin.value() == 0:
-        if time.ticks_diff(time.ticks_us(), timeout_start) > 10000:  # 1ms timeout
+        if time.ticks_diff(time.ticks_us(), timeout_start) > 1000:  # 1ms timeout
             print("Timeout waiting for echo start")
             return None
     start_time = time.ticks_us()
     
     timeout_start = time.ticks_us()
     while echo_pin.value() == 1:
-        if time.ticks_diff(time.ticks_us(), timeout_start) > 10000:  # 1ms timeout
+        if time.ticks_diff(time.ticks_us(), timeout_start) > 1000:  # 1ms timeout
             print("Timeout waiting for echo end")
             return None
     end_time = time.ticks_us()
