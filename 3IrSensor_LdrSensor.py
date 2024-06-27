@@ -55,51 +55,43 @@ def main():
     
     try:
         while True:
-            # Read the analog value from the LDR sensor
             ldr_value = ldr_sensor.read()
             publish_message(client, MQTT_LDR_TOPIC, str(ldr_value))
             
-            # Read the digital state of the IR sensor pins
-            ir_value_d2 = ir_sensor_pin_d2.value()  # 0 if LOW, 1 if HIGH
-            ir_value_d3 = ir_sensor_pin_d3.value()  # 0 if LOW, 1 if HIGH
-            ir_value_d4 = ir_sensor_pin_d4.value()  # 0 if LOW, 1 if HIGH
+            ir_value_d2 = ir_sensor_pin_d2.value()  
+            ir_value_d3 = ir_sensor_pin_d3.value()  
+            ir_value_d4 = ir_sensor_pin_d4.value()  
             
-            # Publish MQTT messages for IR sensor on D2
             if ir_value_d2 == 0:
                 publish_message(client, MQTT_IR_TOPIC1, 'Car Detected')
             else:
                 publish_message(client, MQTT_IR_TOPIC1, 'No Car')
             
-            # Publish MQTT messages for IR sensor on D3
             if ir_value_d3 == 0:
                 publish_message(client, MQTT_IR_TOPIC2, 'Car Detected')
             else:
                 publish_message(client, MQTT_IR_TOPIC2, 'No Car')
 
-            # Publish MQTT messages for IR sensor on D4
             if ir_value_d4 == 0:
                 publish_message(client, MQTT_IR_TOPIC3, 'Car Detected')
             else:
                 publish_message(client, MQTT_IR_TOPIC3, 'No Car')
                 
-            # Determine car presence status and OLED display text
             if ir_value_d2 == 0 and ir_value_d3 == 0 and ir_value_d4 == 0:
                 oled.fill(0)
-                oled.text("FULL!!!", 48, 28)  # Center the text
+                oled.text("FULL!!!", 48, 28)  
                 oled.show()
-                set_servo_angle(0)  # Close the gate
+                set_servo_angle(0)  
                 display_status = "FULL"
             else:
                 oled.fill(0)
-                oled.text("AVAILABLE", 28, 28)  # Center the text
+                oled.text("AVAILABLE", 28, 28)  
                 oled.show()
-                set_servo_angle(90)  # Open the gate
+                set_servo_angle(90) 
                 display_status = "AVAILABLE"
             
-            # Publish MQTT message for OLED display status
             publish_message(client, MQTT_OLED_TOPIC, display_status)
             
-            # Publish MQTT message for display MQTT topics
             if display_status == "FULL":
                 publish_message(client, MQTT_TOTAL_CARS_TOPIC, "FULL!!!")
             else:
