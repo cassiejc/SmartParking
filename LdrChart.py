@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 from collections import deque
 from matplotlib import pyplot as plt
 
-mqtt_server = 'broker.emqx.io'
+mqtt_server = '192.168.1.152'
 mqtt_topic = 'ldrSensor'
 
 class LDRData:
