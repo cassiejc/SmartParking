@@ -2,7 +2,7 @@ import network
 import time
 from umqtt.simple import MQTTClient
 import machine
-from machine import I2C, Pin, PWM
+from machine import I2C, Pin
 import ssd1306
 
 SSID = 'IoT_Dev'
@@ -16,7 +16,6 @@ MQTT_IR_TOPIC1 = 'irSensor1'
 MQTT_IR_TOPIC2 = 'irSensor2'  
 MQTT_IR_TOPIC3 = 'irSensor3'  
 MQTT_OLED_TOPIC = 'oledDisplay'  
-MQTT_TOTAL_CARS_TOPIC = 'totalCars'  
 
 ldr_sensor = machine.ADC(0)
 
@@ -28,13 +27,6 @@ i2c = I2C(scl=Pin(14), sda=Pin(12))
 oled_width = 128
 oled_height = 64
 oled = ssd1306.SSD1306_I2C(oled_width, oled_height, i2c)
-
-servo_pin = machine.Pin(13)
-servo = PWM(servo_pin, freq=50)
-
-def set_servo_angle(angle):
-    duty = int((angle / 180.0 * 1023.0) + 25.6)  
-    servo.duty(duty)
 
 def connect_wifi():
     wlan = network.WLAN(network.STA_IF)
@@ -81,21 +73,14 @@ def main():
                 oled.fill(0)
                 oled.text("FULL!!!", 48, 28)  
                 oled.show()
-                set_servo_angle(0)  
                 display_status = "FULL"
             else:
                 oled.fill(0)
                 oled.text("AVAILABLE", 28, 28)  
                 oled.show()
-                set_servo_angle(90) 
                 display_status = "AVAILABLE"
             
             publish_message(client, MQTT_OLED_TOPIC, display_status)
-            
-            if display_status == "FULL":
-                publish_message(client, MQTT_TOTAL_CARS_TOPIC, "FULL!!!")
-            else:
-                publish_message(client, MQTT_TOTAL_CARS_TOPIC, "AVAILABLE")
             
             time.sleep(1)
             
@@ -104,4 +89,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
