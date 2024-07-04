@@ -33,7 +33,7 @@ def sub_cb(topic, msg):
 
 # Function to control LED based on LDR value
 def control_led(value):
-    if value < 350:
+    if value < 250:
         led.off()
         print("LED OFF")
     else:
@@ -103,13 +103,13 @@ def control_gate():
         distance = measure_distance()
         if distance is not None:
             print("Distance: {:.2f} cm".format(distance))
-            if distance < 10 and not object_detected:  # Object detected and was not previously detected
+            if distance < 5 and not object_detected:  # Object detected and was not previously detected
                 print("Object detected! Opening gate...")
                 move_servo(90)  # Open gate (adjust angle as needed)
                 object_detected = True  # Set object detected state to True
-            elif distance >= 10 and object_detected:  # Object has moved away
+            elif distance >= 5 and object_detected:  # Object has moved away
                 print("Object has passed. Closing gate...")
-                move_servo(0)  # Close gate (adjust angle as needed)
+                move_servo(280)  # Close gate (adjust angle as needed)
                 gate_count += 1
                 print(f"Gate count: {gate_count}")
                 client.publish(TOPIC_GATECOUNT, str(gate_count))  # Publish gate count
@@ -120,7 +120,7 @@ def control_gate():
             print("Failed to measure distance")
     elif oled_state == "FULL":
         print("Gate locked. No action needed.")
-        move_servo(0)  # Ensure servo is at closed position
+        move_servo(280)  # Ensure servo is at closed position
 
 # Setup Wi-Fi and MQTT connection
 connect_wifi()
