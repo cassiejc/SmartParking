@@ -2,7 +2,7 @@ from machine import Pin, PWM
 import time
 import network
 import ubinascii
-from umqtt.robust import MQTTClient
+from umqtt.simple import MQTTClient
 
 SSID = 'IoT_Dev'
 PASSWORD = 'elektro234'
