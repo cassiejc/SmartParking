@@ -93,21 +93,25 @@ def control_gate():
     elif oled_state == "FULL":
         move_servo(0)
 
-connect_wifi()
-client = MQTTClient(CLIENT_ID, MQTT_BROKER)
-client.set_callback(sub_cb)
-client.connect()
-client.subscribe(TOPIC_OLEDDISPLAY)
-client.subscribe(TOPIC_LDRSENSOR)
+def main():
+    connect_wifi()
+    client = MQTTClient(CLIENT_ID, MQTT_BROKER)
+    client.set_callback(sub_cb)
+    client.connect()
+    client.subscribe(TOPIC_OLEDDISPLAY)
+    client.subscribe(TOPIC_LDRSENSOR)
 
-print("Connected to MQTT broker and subscribed to topics")
+    print("Connected to MQTT broker and subscribed to topics")
 
-try:
-    while True:
-        client.check_msg()
-        control_gate()
-        time.sleep(1)
-except KeyboardInterrupt:
-    print("Program stopped")
+    try:
+        while True:
+            client.check_msg()
+            control_gate()
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("Program stopped")
 
-client.disconnect()
+    client.disconnect()
+
+if __name__ == "__main__":
+    main()
